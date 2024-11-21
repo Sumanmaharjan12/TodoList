@@ -9,32 +9,38 @@ const Page = () => {
   const submitHandler = (e) => {
     e.preventDefault()
     if (title && desc) { // Check to avoid empty tasks
-      setMainTask([...mainTask, { title, desc }])
+      const timestamp = new Date().toLocaleString() // Get date and time
+      setMainTask([...mainTask, { title, desc, timestamp }])
       setTitle("")
       setDesc("")
     }
   };
-    const deleteHandler =(index)=>{
-        let copytask = [...mainTask]
-        copytask.splice(index,1)
-        setMainTask(copytask)
-    }
-  
 
-  let renderTask = <h2>No Task Available</h2>
-  if (mainTask.length > 0) {
-    renderTask = mainTask.map((task, index) => {
-       return (
-        <li key={index} className="flex items-center justify-between">
-      <div key={index} className="flex justify-between p-2 m-2 rounded  w-2/3">
-        <h5 className="font-medium text-2xl">{task.title}</h5>
-        <h6 className="font-medium text-1xl">{task.desc}</h6>
-      </div>
-      <button onClick={()=>{deleteHandler(index)}} className="bg-red-400 text-white rounded font-bold w-200xl">Delete</button>
-      </li>
-       )
-  })
+  const deleteHandler = (index) => {
+    const updatedTasks = [...mainTask]
+    updatedTasks.splice(index, 1)
+    setMainTask(updatedTasks)
   }
+
+  const renderTask = mainTask.length > 0 ? (
+    mainTask.map((task, index) => (
+      <li key={index} className="flex items-center justify-between">
+        <div className="flex flex-col justify-between p-2 m-2 rounded w-2/3 bg-white shadow">
+          <h5 className="font-medium text-2xl">{task.title}</h5>
+          <h6 className="font-medium text-xl">{task.desc}</h6>
+          <p className="text-gray-500 text-sm">{task.timestamp}</p>
+        </div>
+        <button onClick={() => deleteHandler(index)} className="text-red-500 hover:text-red-700">
+          {/* Trash Icon */}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 6.75L4.5 6.75M15.75 6.75V4.5a2.25 2.25 0 00-2.25-2.25H10.5a2.25 2.25 0 00-2.25 2.25v2.25m12 0V19.5A2.25 2.25 0 0115.75 21.75h-7.5A2.25 2.25 0 016 19.5V6.75m12 0h-9" />
+          </svg>
+        </button>
+      </li>
+    ))
+  ) : (
+    <h2>No Task Available</h2>
+  )
 
   return (
     <div>
